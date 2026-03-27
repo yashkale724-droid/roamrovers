@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROAMROVERS | Visual Creator</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- CSS VARIABLES --- */
+        :root {
+            --primary: #FF1E1E; 
+            --bg-dark: #050505; 
+            --bg-darker: #000000; 
+            --text-light: #ffffff; 
+            --text-muted: #888888;
+            --font-serif: 'Cinzel', serif;
+            --font-sans: 'Montserrat', sans-serif;
+            --insta-grad: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        }
+
+        /* --- GLOBAL --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-sans); scroll-behavior: smooth; }
+        
+        body {
+            background-color: var(--bg-darker);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        /* --- BACKGROUND (PURE BLACK + RED GLOW ONLY) --- */
+        .bg-graphics {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            background-color: var(--bg-darker);
+            /* Completely removed the background-image starfield here */
+        }
+        
+        .bg-graphics::after {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 30, 30, 0.08), transparent 60%);
+        }
+
+        /* --- NAVIGATION (NO LOGO) --- */
+        nav {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            padding: 1.5rem 4%;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .nav-left, .nav-right { display: flex; gap: 2rem; align-items: center; }
+
+        .nav-links a {
+            color: #bbbbbb;
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--text-light); }
+
+        /* --- HERO SECTION --- */
+        #home {
+            height: 100vh; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; text-align: center; 
+            padding: 0 20px; position: relative;
+        }
+
+        .scroll-indicator-top {
+            display: flex; flex-direction: column; align-items: center;
+            margin-bottom: 2rem; margin-top: -3rem;
+        }
+        
+        .scroll-line {
+            width: 1px; height: 60px; background: rgba(255,255,255,0.2); margin-bottom: 15px;
+        }
+
+        .scroll-text-top {
+            font-size: 0.75rem; color: var(--text-muted); letter-spacing: 3px; text-transform: uppercase;
+        }
+
+        /* ONLY ROAMROVERS TEXT ON ENTIRE SITE */
+        .hero-name {
+            font-family: var(--font-sans); 
+            font-size: 4.5rem; 
+            font-weight: 500;
+            color: var(--text-light); 
+            letter-spacing: 10px;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-tagline {
+            font-family: var(--font-sans); 
+            font-size: 1.5rem; 
+            font-weight: 400;
+            color: var(--primary); 
+            letter-spacing: 2px; 
+            text-transform: uppercase;
+        }
+
+        .journey-pill-btn {
+            position: absolute; bottom: 8%;
+            border: 1px solid rgba(255,255,255,0.4); color: var(--text-light);
+            text-decoration: none; padding: 12px 35px; border-radius: 30px;
+            font-size: 0.85rem; letter-spacing: 2px; transition: all 0.3s ease; text-transform: uppercase;
+        }
+
+        .journey-pill-btn:hover { background: var(--text-light); color: var(--bg-dark); }
+
+        /* --- THE JOURNEY SECTION --- */
+        #about-journey {
+            padding: 8rem 5% 4rem; display: flex; justify-content: center;
+        }
+
+        .journey-container {
+            max-width: 900px; text-align: center; background: rgba(10, 10, 10, 0.6); 
+            padding: 4rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);
+            backdrop-filter: blur(5px);
+        }
+
+        .journey-container h2 {
+            font-family: var(--font-serif); font-size: 3rem; color: var(--text-light);
+            margin-bottom: 2rem; letter-spacing: 4px; font-weight: 400; text-transform: uppercase;
+        }
+
+        .journey-container p {
+            font-size: 1rem; color: #bbbbbb; line-height: 1.9; margin-bottom: 1.5rem; font-weight: 300;
+        }
+
+        /* --- INTERACTIVE GRADING SECTION --- */
+        #grading {
+            padding: 8rem 5% 6rem;
+            display: flex; flex-direction: column; align-items: center;
+            position: relative; overflow: hidden; width: 100%;
+        }
+
+        .grading-title {
+            font-family: var(--font-serif); font-size: 3.5rem; color: var(--text-light);
+            letter-spacing: 5px; font-weight: 700; margin-bottom: 0.5rem; z-index: 2; text-align: center; text-transform: uppercase;
+        }
+        .grading-subtitle {
+            font-family: var(--font-sans); font-size: 1rem; color: #aaaaaa;
+            letter-spacing: 2px; margin-bottom: 3rem; z-index: 2; text-align: center; text-transform: uppercase;
+        }
+
+        .compare-container {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            aspect-ratio: 16 / 9;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: #111;
+        }
+
+        .compare-img {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+
+        .compare-img-raw {
+            filter: grayscale(85%) contrast(80%) brightness(110%);
+            clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+            z-index: 2;
+        }
+
+        .compare-slider {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            opacity: 0; 
+            cursor: ew-resize;
+            z-index: 10;
+        }
+
+        .compare-line {
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 2px;
+            background-color: var(--primary);
+            left: 50%; 
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .compare-handle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px; height: 40px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            color: white; font-weight: bold; font-size: 1.2rem;
+            box-shadow: 0 0 15px rgba(255, 30, 30, 0.5);
+        }
+
+        .compare-labels {
+            position: absolute;
+            bottom: 20px; width: 100%;
+            display: flex; justify-content: space-between;
+            padding: 0 30px;
+            pointer-events: none; z-index: 6;
+        }
+
+        .compare-labels span {
+            background: rgba(0,0,0,0.8); color: white;
+            padding: 5px 15px; font-size: 0.8rem; letter-spacing: 2px;
+            text-transform: uppercase; border-radius: 2px; border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* --- PORTFOLIO COVERS --- */
+        #explore { padding: 4rem 5% 8rem; display: flex; align-items: center; justify-content: center; }
+
+        .trigger-container { display: flex; gap: 3rem; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 1200px; }
+        
+        .trigger-card {
+            flex: 1; min-width: 300px; height: 450px; border-radius: 4px;
+            position: relative; overflow: hidden; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); 
+            transition: transform 0.5s ease, border-color 0.5s ease;
+        }
+        
+        .trigger-card:hover { transform: translateY(-10px); border-color: rgba(255, 30, 30, 0.5); }
+        .trigger-card img, .trigger-card video { width: 100%; height: 100%; object-fit: cover; opacity: 0.4; transition: opacity 0.5s, transform 0.8s; }
+        .trigger-card:hover img, .trigger-card:hover video { opacity: 0.15; transform: scale(1.08); }
+        
+        .trigger-content {
+            position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            pointer-events: none; border: 15px solid transparent; transition: border 0.4s;
+        }
+        .trigger-content h3 { font-family: var(--font-serif); font-size: 2.2rem; color: var(--text-light); margin-bottom: 15px; letter-spacing: 4px; font-weight: 400; text-transform: uppercase; }
+        .trigger-content span { color: var(--text-light); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 3px; background: var(--primary); padding: 10px 25px; border-radius: 2px; font-weight: 600; }
+
+        /* --- CONTACT SECTION --- */
+        #contact {
+            padding: 8rem 5% 6rem; display: flex; flex-direction: column; align-items: center; position: relative; overflow: hidden; width: 100%;
+        }
+
+        .orb-ring {
+            position: absolute; top: 50%; left: 50%; border-radius: 50%;
+            border: 1px solid rgba(255, 30, 30, 0.25); z-index: 0; pointer-events: none;
+        }
+        .ring-1 { width: 500px; height: 500px; transform: translate(-50%, -50%) rotate(45deg) scaleY(0.4); }
+        .ring-2 { width: 600px; height: 600px; transform: translate(-50%, -50%) rotate(-30deg) scaleY(0.5); }
+
+        .contact-title {
+            font-family: var(--font-serif); font-size: 3.5rem; color: var(--text-light);
+            letter-spacing: 5px; font-weight: 700; margin-bottom: 0.5rem; z-index: 2; text-align: center; text-transform: uppercase;
+        }
+        .contact-subtitle {
+            font-family: var(--font-sans); font-size: 1rem; color: #aaaaaa;
+            letter-spacing: 2px; margin-bottom: 3rem; z-index: 2; text-align: center; text-transform: uppercase;
+        }
+
+        .contact-form-container {
+            background: rgba(10, 10, 10, 0.8); border: 1px solid rgba(255,255,255,0.05);
+            padding: 3rem; border-radius: 8px; width: 100%; max-width: 600px;
+            backdrop-filter: blur(10px); z-index: 2; position: relative;
+        }
+
+        .input-group { display: flex; flex-direction: column; margin-bottom: 1.5rem; }
+        .input-group label {
+            font-size: 0.7rem; letter-spacing: 2px; color: var(--text-muted);
+            margin-bottom: 10px; text-transform: uppercase; font-weight: 500;
+        }
+        .input-group input, .input-group textarea {
+            background: #000000; border: 1px solid #222222; padding: 15px;
+            color: var(--text-light); font-family: var(--font-sans); font-size: 0.95rem;
+            border-radius: 4px; outline: none; transition: border-color 0.3s; width: 100%;
+        }
+        .input-group input:focus, .input-group textarea:focus { border-color: var(--primary); }
+        .input-group textarea { resize: vertical; min-height: 120px; }
+
+        .send-btn {
+            width: 100%; background: transparent; border: 1px solid var(--primary);
+            color: var(--text-light); padding: 16px; font-family: var(--font-sans);
+            font-weight: 500; letter-spacing: 3px; text-transform: uppercase;
+            cursor: pointer; transition: 0.3s; border-radius: 4px; margin-top: 1rem; font-size: 0.85rem;
+        }
+        .send-btn:hover { background: var(--primary); }
+
+        .insta-btn {
+            margin-top: 2rem; width: 100%; max-width: 600px;
+            background: var(--insta-grad); color: var(--text-light);
+            text-decoration: none; padding: 18px; text-align: center;
+            font-family: var(--font-sans); font-weight: 600; font-size: 0.9rem;
+            letter-spacing: 3px; text-transform: uppercase; border-radius: 6px;
+            box-shadow: 0 10px 30px rgba(220, 39, 67, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s; z-index: 2; display: block;
+        }
+        .insta-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(220, 39, 67, 0.6); }
+
+        /* --- INTERACTIVE MODALS --- */
+        .modal {
+            display: none; position: fixed; inset: 0; z-index: 999;
+            background: rgba(0, 0, 0, 0.98); backdrop-filter: blur(25px);
+            overflow-y: auto; padding: 4rem 5%; animation: fadeIn 0.4s ease;
+        }
+        
+        .close-btn {
+            position: absolute; top: 15px; right: 25px; font-size: 3rem; color: var(--text-muted);
+            cursor: pointer; transition: color 0.3s; line-height: 1; font-family: sans-serif;
+        }
+        .close-btn:hover { color: var(--text-light); }
+
+        .modal-header { text-align: center; margin-bottom: 2rem; margin-top: 1rem;}
+        .modal-header h2 { font-family: var(--font-serif); font-size: 2.2rem; color: var(--text-light); letter-spacing: 3px; font-weight: 400; text-transform: uppercase;}
+
+        .filter-controls { display: flex; justify-content: center; gap: 10px; margin-bottom: 2rem; flex-wrap: wrap; }
+        .filter-btn {
+            background: transparent; border: 1px solid rgba(255,255,255,0.2); color: var(--text-muted);
+            padding: 8px 20px; border-radius: 2px; cursor: pointer; transition: all 0.3s; font-size: 0.7rem; letter-spacing: 1.5px; text-transform: uppercase;
+        }
+        .filter-btn:hover, .filter-btn.active { border-color: var(--primary); color: var(--text-light); }
+
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; max-width: 1400px; margin: 0 auto; }
+        .gallery-item { display: none; border-radius: 2px; overflow: hidden; position: relative; aspect-ratio: 4/5; background: #111; border: 1px solid #222; }
+        .gallery-item.show { display: block; animation: zoomIn 0.5s ease; }
+        @keyframes zoomIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+        .gallery-item img, .gallery-item video { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s; }
+        .gallery-item:hover img { transform: scale(1.05); }
+        
+        .item-label {
+            position: absolute; bottom: 0; left: 0; width: 100%; padding: 25px 15px 15px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.95)); color: white;
+            font-family: var(--font-serif); font-size: 1.1rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; letter-spacing: 1px;
+        }
+        .gallery-item:hover .item-label { opacity: 1; }
+
+        .video-item { aspect-ratio: 9/16; } 
+        .video-item video { border: none; outline: none; }
+
+        /* ========================================= */
+        /* --- MOBILE RESPONSIVENESS --- */
+        /* ========================================= */
+        @media (max-width: 900px) {
+            nav { 
+                flex-direction: column; 
+                padding: 1.5rem 5%; 
+                background: #050505; 
+                gap: 15px;
+                border-bottom: 1px solid #222;
+            }
+            .nav-left, .nav-right {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+            .hero-name { font-size: 2.2rem; letter-spacing: 5px; margin-top: 2rem; }
+            .hero-tagline { font-size: 1.1rem; letter-spacing: 2px;}
+            
+            .journey-container { padding: 2rem 1.5rem; margin: 0 10px; }
+            .journey-container h2 { font-size: 2rem; }
+            
+            .grading-title { font-size: 2.5rem; letter-spacing: 3px; }
+            .compare-container { aspect-ratio: 4/5; } 
+            
+            .trigger-card { height: 350px; min-width: 100%; }
+            .trigger-content h3 { font-size: 2rem; }
+            
+            #contact { padding: 5rem 5% 4rem; }
+            .contact-title { font-size: 2.5rem; letter-spacing: 3px; }
+            .contact-form-container { padding: 2rem 1.5rem; margin: 0 10px; }
+            .insta-btn { font-size: 0.8rem; padding: 15px; }
+            
+            .video-item { aspect-ratio: auto; height: 500px; } 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-graphics"></div>
+
+    <nav>
+        <div class="nav-left nav-links">
+            <a href="#home">Home</a>
+            <a href="#about-journey">About</a>
+            <a href="#explore">Event</a>
+            <a href="#grading">Grading</a>
+            <a href="#contact">Contact</a>
+        </div>
+        
+        <div class="nav-right nav-links">
+            <a href="https://instagram.com/roamrovers_" target="_blank">Instagram</a>
+        </div>
+    </nav>
+
+    <section id="home">
+        <div class="scroll-indicator-top">
+            <div class="scroll-line"></div>
+            <span class="scroll-text-top">Scroll Down</span>
+        </div>
+
+        <h1 class="hero-name">ROAMROVERS</h1>
+        <p class="hero-tagline">Begin Your Journey</p>
+        
+        <a href="#about-journey" class="journey-pill-btn">Journey</a>
+    </section>
+
+    <section id="about-journey">
+        <div class="journey-container">
+            <h2>The Journey</h2>
+            <p>Hi, I'm Yash. While my academic life is rooted in computer engineering and code, my ultimate creative escape has always been behind a camera.</p>
+            <p>I am not a full-time professional—I do this simply out of a pure, unfiltered love for capturing the world as I see it. Whether it's framing the perfect still photograph, shooting cinematic video reels, or spending late hours editing footage to get the exact right vibe, creating visuals is my true passion.</p>
+        </div>
+    </section>
+
+    <section id="grading">
+        <h2 class="grading-title">THE GRADE</h2>
+        <p class="grading-subtitle">DRAG TO COMPARE RAW VS GRADED</p>
+        
+        <div class="compare-container">
+            <img src="Trishund.jpeg" alt="Graded Image" class="compare-img">
+            
+            <img src="Trishund.jpeg" alt="Raw Image" class="compare-img compare-img-raw" id="compareOverlayImg">
+
+            <input type="range" min="0" max="100" value="50" class="compare-slider" id="compareSlider">
+            
+            <div class="compare-line" id="compareLine">
+                <div class="compare-handle">↔</div>
+            </div>
+
+            <div class="compare-labels">
+                <span>Raw Log</span>
+                <span>Graded</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="explore">
+        <div class="trigger-container">
+            <div class="trigger-card" onclick="openModal('photoModal')">
+                <img src="Krishna.jpeg" alt="Photography Cover">
+                <div class="trigger-content">
+                    <h3>Photography</h3>
+                    <span>Open Vault</span>
+                </div>
+            </div>
+            
+            <div class="trigger-card" onclick="openModal('videoModal')">
+                <video src="video.mp4" autoplay muted loop playsinline></video>
+                <div class="trigger-content">
+                    <h3>Videography</h3>
+                    <span>Play Motion</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="orb-ring ring-1"></div>
+        <div class="orb-ring ring-2"></div>
+
+        <h2 class="contact-title">LET'S CREATE.</h2>
+        <p class="contact-subtitle">Reach out for edits, shoots, or collaborations.</p>
+
+        <div class="contact-form-container">
+            <form action="https://formsubmit.co/yashkale724@gmail.com" method="POST">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_next" value="#">
+                <div class="input-group">
+                    <label>Name</label>
+                    <input type="text" name="name" placeholder="Name" required>
+                </div>
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="john@example.com" required>
+                </div>
+                <div class="input-group">
+                    <label>Project Details</label>
+                    <textarea name="message" placeholder="Tell me about your vision..." required></textarea>
+                </div>
+                <button type="submit" class="send-btn">Send Message</button>
+            </form>
+        </div>
+
+        <a href="https://instagram.com/roamrovers_" target="_blank" class="insta-btn">Follow On Instagram @roamrovers_</a>
+    </section>
+
+    <div id="photoModal" class="modal">
+        <span class="close-btn" onclick="closeModal('photoModal')">&times;</span>
+        <div class="modal-header"><h2>Photography</h2></div>
+        <div class="filter-controls" id="photoFilters">
+            <button class="filter-btn active" onclick="filterGallery('all', 'photoGrid', this)">All Work</button>
+            <button class="filter-btn" onclick="filterGallery('divine', 'photoGrid', this)">Divine</button>
+            <button class="filter-btn" onclick="filterGallery('historic', 'photoGrid', this)">Historic Places</button>
+        </div>
+        <div class="gallery-grid" id="photoGrid">
+            <div class="gallery-item divine show"><img src="Krishna.jpeg" alt="Lord Krishna"><div class="item-label">Divine Radiance</div></div>
+            <div class="gallery-item divine show"><img src="Ganesh.jpeg" alt="Lord Ganesha"><div class="item-label">Shri Ganesha</div></div>
+            <div class="gallery-item historic show"><img src="Trishund.jpeg" alt="Trishund Mayureshwar"><div class="item-label">Trishund Architecture</div></div>
+            <div class="gallery-item historic show"><img src="mandir.jpg" alt="Majestic Mandir"><div class="item-label">Majestic Mandir</div></div>
+        </div>
+    </div>
+
+    <div id="videoModal" class="modal">
+        <span class="close-btn" onclick="closeModal('videoModal', true)">&times;</span>
+        <div class="modal-header"><h2>Videography</h2></div>
+        <div class="filter-controls" id="videoFilters">
+            <button class="filter-btn active" onclick="filterGallery('all', 'videoGrid', this)">All Motion</button>
+            <button class="filter-btn" onclick="filterGallery('festivals', 'videoGrid', this)">Festivals & Culture</button>
+        </div>
+        <div class="gallery-grid" id="videoGrid">
+            <div class="gallery-item video-item festivals show"><video src="video.mp4" controls loop playsinline class="modal-vid"></video><div class="item-label">Cultural Procession</div></div>
+            <div class="gallery-item video-item festivals show"><video src="video2.mp4" controls loop playsinline class="modal-vid"></video><div class="item-label">Hindu Nav Varsha</div></div>
+        </div>
+    </div>
+
+    <script>
+        // Modal Logic
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "block";
+            document.body.style.overflow = "hidden"; 
+        }
+
+        function closeModal(modalId, isVideo = false) {
+            document.getElementById(modalId).style.display = "none";
+            document.body.style.overflow = "auto";
+            if(isVideo) {
+                let vids = document.getElementsByClassName("modal-vid");
+                for(let i = 0; i < vids.length; i++) vids[i].pause();
+            }
+        }
+
+        function filterGallery(category, gridId, btnElement) {
+            let items = document.getElementById(gridId).getElementsByClassName("gallery-item");
+            for (let i = 0; i < items.length; i++) {
+                items[i].classList.remove("show"); 
+                if (category === "all" || items[i].classList.contains(category)) items[i].classList.add("show");
+            }
+            let btns = btnElement.parentElement.getElementsByClassName("filter-btn");
+            for (let i = 0; i < btns.length; i++) btns[i].classList.remove("active");
+            btnElement.classList.add("active");
+        }
+
+        filterGallery('all', 'photoGrid', document.querySelector('#photoFilters .active'));
+        filterGallery('all', 'videoGrid', document.querySelector('#videoFilters .active'));
+
+        // Image Comparison Slider Logic (Using Clip-Path)
+        const slider = document.getElementById('compareSlider');
+        const overlayImg = document.getElementById('compareOverlayImg');
+        const sliderLine = document.getElementById('compareLine');
+
+        slider.addEventListener('input', (e) => {
+            const sliderValue = e.target.value;
+            overlayImg.style.clipPath = `polygon(0 0, ${sliderValue}% 0, ${sliderValue}% 100%, 0 100%)`;
+            sliderLine.style.left = sliderValue + '%';
+        });
+    </script>
+</body>
+</html>
